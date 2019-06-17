@@ -9,6 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ProdutoTest {
 
     @Test
+    @DisplayName("O estoque nao pode ser negativo")
+    public void testaEstoqueNeg() {
+        //cenário
+        Produto produto = new Produto();
+
+        //ação
+        assertThrows(ValidationException.class, () -> produto.cadastrar("asasadasd", "aasasdasd", 2, 3.50, 4.50, -1));
+    }
+
+    @Test
     @DisplayName("O estoque nao pode ficar negativo")
     public void testeEstoqueNegativo() {
 
@@ -53,11 +63,11 @@ public class ProdutoTest {
         Produto produto = new Produto();
 
         //ação
-        produto.cadastrar("asasadasd", "aasasdasd", 1, 1.00D, 2, 1);
+        produto.cadastrar("asasadasd", "aasasdasd", 1000, 1.00D, 2, 1);
 
         //teste
         double valorPLitro = produto.getValorPorLitro();
-        assertEquals(2.0D/ 1.00D * 1000.00D, valorPLitro);
+        assertEquals(2.0 * 1000.00 / 1000.00, valorPLitro);
     }
 
     @Test
@@ -73,13 +83,46 @@ public class ProdutoTest {
 
     @Test
     @DisplayName("nome do Produto deverá possuir entre 3 e 50 caracteres, inclusive")
+    public void testeNomeProdutoMaiorIgualQue3() {
+
+        //cenário
+        Produto produto = new Produto();
+
+        //ação e teste
+        produto.cadastrar("asasadasd", "aad", 1, 1.00D, 2, 1);
+
+        //teste
+        assertEquals("aad", produto.getNome());
+    }
+
+    @Test
+    @DisplayName("nome do Produto deverá possuir entre 3 e 50 caracteres, inclusive")
+    public void testeNomeProdutoMenorQue50() {
+
+        //cenário
+        Produto produto = new Produto();
+
+        String nome = "";
+        for (int i = 1; i <= 50; i++) {
+            nome += "a";
+        }
+        final String nomeProduto = nome;
+        //ação e teste
+        produto.cadastrar("a", nome, 1, 1.00D, 2, 1);
+
+        //teste
+        assertEquals("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", produto.getNome());
+    }
+
+    @Test
+    @DisplayName("nome do Produto deverá possuir entre 3 e 50 caracteres, inclusive")
     public void testeNomeProdutoMaiorQue50() {
 
         //cenário
         Produto produto = new Produto();
 
         String nome = "";
-        for (int i = 0; i <= 50; i++) {
+        for (int i = 1; i <= 51; i++) {
             nome += "a";
         }
         final String nomeProduto = nome;
